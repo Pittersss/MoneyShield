@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Ambitions .cs" />
     <Compile Include="MainPage.cs" />
+    <Compile Include="Menu.cs" />
     <Compile Include="MoneyControl.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Program.cs" />

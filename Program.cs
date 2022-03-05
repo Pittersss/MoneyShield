@@ -13,9 +13,8 @@ namespace TestsMoneyShield
         static void Main(string[] args)
         {
             //EM PRODUÇÃO
-            MainPage main = new MainPage("Pedro", "Recepcionista", 18);
-            main.oddJobCheck();
-            main.CalcAmbs();
+            Menu menu = new Menu();
+
 
             Console.ReadKey();
         }
