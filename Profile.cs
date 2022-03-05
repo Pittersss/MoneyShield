@@ -8,6 +8,7 @@ namespace TestsMoneyShield
 {
    static class Profile
     {
+        //EM PRODUÇÃO
         public static string user_Name;
         public static int age;
         public static string main_Occupation;

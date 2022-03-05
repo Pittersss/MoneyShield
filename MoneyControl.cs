@@ -8,6 +8,7 @@ namespace TestsMoneyShield
 {
      abstract class MoneyControl
     {
+        //EM PRODUÇÃO
         private double salary;
         private double[] expenses;
         private double totality;
