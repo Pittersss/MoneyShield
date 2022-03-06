@@ -8,44 +8,53 @@ namespace TestsMoneyShield
 {
     public class Menu
     {
-        public void inicialMenu()
+        private MainPage main = new MainPage();
+        public void VisualMenu()
         {
             Console.Clear();
             Console.WriteLine("** Menu **");
             Console.WriteLine("1- Cadastrar-se");
             Console.WriteLine("2- Mostrar Perfil");
             Console.WriteLine("3- Sair");
+            MenuLogic();
         }
-        public void  MenuShow()
+        public void  MenuLogic()
         {
-            string index = Console.ReadLine();
-            Profile pf = new Profile();
+            Console.WriteLine("Escreva o número da opção desejada");
+            int index = int.Parse(Console.ReadLine());
+           
             //Inicio de um menu que vai se expandir
-            while (index != "3")
+            while (index != 4)
             {
             switch(index)
               {
-                case "1":
-                    MainPage main = new MainPage();
+                case 1:
+                    main.MainPageIntro();
                     main.oddJobCheck();
                     main.CalcAmbs();
-                    index = "";
-                    inicialMenu();
                     break;
-                case "2":
-                    pf.ShowProfile();
-                        index = "";
-                        inicialMenu();
+                case 2:
+                    main.ShowProfile();
                         break;
-                case "3":
+                case 3:
                     Console.WriteLine("Muito obrigado. Até mais!");
-                        index = "";
-                        inicialMenu();
-                        break;    
+                    break;
+                case 4: break;
+                    default: Console.WriteLine("Opção Inválida");
+                        break;
+
               }
-                
+                if (index != 6)
+                {
+                    Console.WriteLine();
+                    Console.Write("Tecla [ENTER] para continuar");
+                    Console.ReadLine();
+                }
+                    VisualMenu();
+                index = int.Parse(Console.ReadLine());
             }
-            
+            Console.ReadKey();
         }
+        
     }
 }

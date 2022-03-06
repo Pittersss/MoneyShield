@@ -8,30 +8,31 @@ namespace TestsMoneyShield
 {
     public class MainPage
     {
-        public string name, mainJob, oddJobName;
-        public double age;
+        ///Variáveis que não podem perder o valor, devem ser fixas nos valores impostos
+        public static string name, mainJob, oddJobName;
+        public static double age;
         public static double rent, oddRent;
         public static double expenses = 0.0;
+        public static bool haveOddJob;
+        public static double actualMoney;
+
+        ///Variáveis Voláteis 
         public double[] oddjob;
         public int indexOddJob;
-        public static bool haveOddJob;
         public bool Oddfortnightly, OddeveryWeek, Oddmonthly, Odddaily;
         public bool fortnightly, everyWeek, monthly, other;
         public bool fortnightlyExt, everyWeekExt, monthlyExt, dailyExt;
-        public static double actualMoney;
+        
+        ////Inicialização de Funções que vão construir a página central da aplicação
 
-
-        public MainPage()
+        //Cadastro do usuário
+        public void MainPageIntro()
         {
-
-            //Sempre que essa função for invocada criará essas perguntas
-            //Para futuro armazenamento em banco de dados
-            var date = DateTime.Today.Hour;
-            Console.WriteLine(date);
             Console.WriteLine("Qual é o seu nome?");
             name = Console.ReadLine();
             Console.WriteLine("Qual é a sua idade?");
             age = Convert.ToDouble(Console.ReadLine()); 
+            //Análise de renda
             Console.WriteLine("Qual é o seu emprego principal?");
             mainJob = Console.ReadLine();
             Console.WriteLine("Qual é a sua renda nesse emprego?");
@@ -54,12 +55,12 @@ namespace TestsMoneyShield
                     break;
                     
             }
-            Console.WriteLine("Seja bem vindo {0}, agora você terá a possibilidade de organizar as suas finaças de maneira simples gratuitamente", Profile.user_Name);
+            Console.WriteLine("Seja bem vindo {0}, agora você terá a possibilidade de organizar as suas finaças de maneira simples gratuitamente", name);
             
         }
         public void oddJobCheck()
         {
-            //ampliar o calculo de renda para pessoas que teem "bicos"
+            //ampliar o calculo de renda para pessoas que teem outras fontes de dinheiro
          Console.WriteLine("Você possui alguma outra fonte de renda? Digite 1 para 'Sim' ou digite 2 para 'Não'");
          if (Convert.ToString(Console.ReadLine()) == "1")
          {
@@ -78,12 +79,14 @@ namespace TestsMoneyShield
         {
             if (haveOddJob == true)
             {
+                //Quantas rendas extras você tem
             double result = 0;
             Console.WriteLine("Quantos você tem?");
             indexOddJob = int.Parse(Console.ReadLine());
             oddjob = new double[indexOddJob];
             double[] oddjobRent = new double[indexOddJob];
-            
+            //Repetição da análise de ganhos a mais para juntar no cálculo final
+            //Sempre com uma consideração mensal
                 foreach (double s in oddjob)
                 {
                     Console.WriteLine("Qual é o seu cargo na sua renda extra?");
@@ -96,19 +99,19 @@ namespace TestsMoneyShield
                             Console.WriteLine("Quanto você recebe?");
                             oddjobRent[Convert.ToInt64(s)] = double.Parse(Console.ReadLine());
                             Odddaily = true;
-                            rent += oddjobRent[Convert.ToInt64(s)];
+                            rent += oddjobRent[Convert.ToInt64(s)] * 30;
                             break;
                         case 2:
                             Console.WriteLine("Quanto você recebe?");
                             oddjobRent[Convert.ToInt64(s)] = double.Parse(Console.ReadLine());
                             OddeveryWeek = true;
-                            rent += oddjobRent[Convert.ToInt64(s)];
+                            rent += oddjobRent[Convert.ToInt64(s)] * 4;
                             break;
                         case 3:
                             Console.WriteLine("Quanto você recebe?");
                                 oddjobRent[Convert.ToInt64(s)] = double.Parse(Console.ReadLine());
                                 Oddfortnightly = true;
-                                rent += oddjobRent[Convert.ToInt64(s)];
+                                rent += oddjobRent[Convert.ToInt64(s)] * 2;
                             break;
                         case 4:
                             Console.WriteLine("Quanto você recebe?");
@@ -128,7 +131,7 @@ namespace TestsMoneyShield
             
         }
 
-        //Calculador de dispesas para mostrar o que resta do meu salário
+        //Calculador de dispesas para mostrar o que resta do salário
         public void CalcExpenses()
         {
             if(monthly == true)
@@ -166,9 +169,9 @@ namespace TestsMoneyShield
             if (Convert.ToString(Console.ReadLine()) == "1")
             {
                 Console.WriteLine("Quantas?");
-                //int idexOfOtherExpens = int.Parse(Console.ReadLine());
+                //Array caso você tenha mais de um dispesa extra e repetir a lógica no foreach abaixo
                 int[] otherExpens = new int[int.Parse(Console.ReadLine())];
-
+                
                 foreach (int y in otherExpens)
 
                 {
@@ -210,7 +213,6 @@ namespace TestsMoneyShield
                         expenses += otherExp;
                         actualMoney = rent - expenses;
                         Console.WriteLine("Sobra para você mensalmente, aproximadamente {0}", (actualMoney));
-
                     }
 
                 }
@@ -222,15 +224,21 @@ namespace TestsMoneyShield
                 Console.WriteLine("Sobra para você {0}", (actualMoney));
             }
         }
+        public void ShowProfile()
+        {
+            Console.WriteLine("NOME: " + name.ToUpper());
+            Console.WriteLine("IDADE: " + age);
+            Console.WriteLine("EMPREGO: " + mainJob.ToUpper());
+            Console.WriteLine("SALÁRIO: " + rent);
+            Console.WriteLine("RENDA LÍQUIDA: " + actualMoney);
+        }
         //Calculara quanto tempo preciso juntar dinheiro para comprar algo que desejo
         public void CalcAmbs()
         {
-            Ambitions abms = new Ambitions();
-            abms.OrganizeAbm();
+            Ambitions.OrganizeAbm();
             double calculo;
-            calculo = abms.value[0] / actualMoney;
+            calculo = Ambitions.value[Ambitions.arrayIndex] / actualMoney;
             Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} meses", Convert.ToInt32(calculo));
-            Menu menu = new Menu();
         }
     }
 }

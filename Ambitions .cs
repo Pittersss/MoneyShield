@@ -9,15 +9,18 @@ namespace TestsMoneyShield
 {
     public class Ambitions
     {
-        public string[] Ambname = new string[3];
-        public double[] value = new double[3];
-        public void OrganizeAbm()
+        public static int arrayIndex = -1;
+        public static string[] ambName;
+        public static double[] value;
+        
+        public static void OrganizeAbm()
         {
-
-            Console.WriteLine("Qual o nome do seu objetivo ou meta, como por exemplo 'Comprar carro' ");
-            Ambname[0] = Console.ReadLine();
+            arrayIndex++;
+            Console.WriteLine("Dê um nome para o seu objetivo/meta");
+            ambName[arrayIndex] = Console.ReadLine();
             Console.WriteLine("Quanto dinheiro você precisa para atingir esse objetivo/meta?");
-            value[0] = double.Parse(Console.ReadLine());
+            value[arrayIndex] = double.Parse(Console.ReadLine());
+            
         }
         
 
