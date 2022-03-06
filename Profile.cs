@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TestsMoneyShield
 {
-   static class Profile
+    class Profile
     {
 
         //EM PRODUÇÃO
@@ -16,23 +16,17 @@ namespace TestsMoneyShield
         static public bool[] oddJob;
         public static string[] goals;
 
-        public static void ShowProfile()
+        public void ShowProfile()
         {
-            try
-            {
-
-            Console.WriteLine("NOME: " + user_Name.ToUpper());
-            Console.WriteLine("IDADE: " + age);
-            Console.WriteLine("EMPREGO: " + main_Occupation.ToUpper());
+            MainPage main = new MainPage();
+         
+             //Tenta mostrar os dados do usuário
+            Console.WriteLine("NOME: " + main.name.ToUpper());
+            Console.WriteLine("IDADE: " + main.age);
+            Console.WriteLine("EMPREGO: " + main.mainJob.ToUpper());
           
-            Menu menu = new Menu(); 
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-            
             Console.ReadKey();
         }
+
     }
 }

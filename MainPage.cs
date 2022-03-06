@@ -9,7 +9,8 @@ namespace TestsMoneyShield
     public class MainPage
     {
         public string name, mainJob, oddJobName;
-        public static double age, rent, oddRent;
+        public double age;
+        public static double rent, oddRent;
         public static double expenses = 0.0;
         public double[] oddjob;
         public int indexOddJob;
@@ -25,19 +26,16 @@ namespace TestsMoneyShield
 
             //Sempre que essa função for invocada criará essas perguntas
             //Para futuro armazenamento em banco de dados
-            var date = DateTime.Today;
+            var date = DateTime.Today.Hour;
             Console.WriteLine(date);
             Console.WriteLine("Qual é o seu nome?");
-            Profile.user_Name = Console.ReadLine();
+            name = Console.ReadLine();
             Console.WriteLine("Qual é a sua idade?");
             age = Convert.ToDouble(Console.ReadLine()); 
             Console.WriteLine("Qual é o seu emprego principal?");
             mainJob = Console.ReadLine();
             Console.WriteLine("Qual é a sua renda nesse emprego?");
             rent = Convert.ToDouble(Console.ReadLine());
-            Profile.user_Name = name;
-            Profile.age = age;
-            Profile.main_Occupation = mainJob;
             Console.WriteLine("Você recebe de forma: 1.Quinzenal, 2.Mensal ou 3.Semanal? Caso seja de outro modo digite 4");
             int geralInts = int.Parse(Console.ReadLine());
             switch(geralInts)

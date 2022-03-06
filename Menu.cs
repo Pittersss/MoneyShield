@@ -8,29 +8,44 @@ namespace TestsMoneyShield
 {
     public class Menu
     {
-        public MainPage menu;
-        public Menu()
+        public void inicialMenu()
         {
-            
-            //Inicio de um menu qque vai se expandir
+            Console.Clear();
             Console.WriteLine("** Menu **");
             Console.WriteLine("1- Cadastrar-se");
             Console.WriteLine("2- Mostrar Perfil");
             Console.WriteLine("3- Sair");
-            if (Console.ReadLine() == "1")
+        }
+        public void  MenuShow()
+        {
+            string index = Console.ReadLine();
+            Profile pf = new Profile();
+            //Inicio de um menu que vai se expandir
+            while (index != "3")
             {
-                menu = new MainPage();
-                menu.oddJobCheck();
-                menu.CalcAmbs();      
+            switch(index)
+              {
+                case "1":
+                    MainPage main = new MainPage();
+                    main.oddJobCheck();
+                    main.CalcAmbs();
+                    index = "";
+                    inicialMenu();
+                    break;
+                case "2":
+                    pf.ShowProfile();
+                        index = "";
+                        inicialMenu();
+                        break;
+                case "3":
+                    Console.WriteLine("Muito obrigado. Até mais!");
+                        index = "";
+                        inicialMenu();
+                        break;    
+              }
+                
             }
-            if(Console.ReadLine() == "2")
-            {
-                Profile.ShowProfile();
-            }
-            if(Console.ReadLine() == "3")
-            {
-                Console.WriteLine("Obrigado por utilizar a minha aplicação");
-            }
+            
         }
     }
 }

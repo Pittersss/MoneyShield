@@ -14,7 +14,8 @@ namespace TestsMoneyShield
         {
             //EM PRODUÇÃO
             Menu menu = new Menu();
-
+            menu.inicialMenu();
+            menu.MenuShow();
 
             Console.ReadKey();
         }

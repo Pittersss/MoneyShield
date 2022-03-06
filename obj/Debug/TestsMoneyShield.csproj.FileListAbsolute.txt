@@ -1,7 +1,7 @@
 C:\Users\Pedro\source\repos\TestsMoneyShield\TestsMoneyShield\bin\Debug\TestsMoneyShield.exe.config
 C:\Users\Pedro\source\repos\TestsMoneyShield\TestsMoneyShield\bin\Debug\TestsMoneyShield.exe
 C:\Users\Pedro\source\repos\TestsMoneyShield\TestsMoneyShield\bin\Debug\TestsMoneyShield.pdb
-C:\Users\Pedro\source\repos\TestsMoneyShield\TestsMoneyShield\obj\Debug\TestsMoneyShield.csprojAssemblyReference.cache
 C:\Users\Pedro\source\repos\TestsMoneyShield\TestsMoneyShield\obj\Debug\TestsMoneyShield.csproj.CoreCompileInputs.cache
 C:\Users\Pedro\source\repos\TestsMoneyShield\TestsMoneyShield\obj\Debug\TestsMoneyShield.exe
 C:\Users\Pedro\source\repos\TestsMoneyShield\TestsMoneyShield\obj\Debug\TestsMoneyShield.pdb
+C:\Users\Pedro\source\repos\TestsMoneyShield\TestsMoneyShield\obj\Debug\TestsMoneyShield.csprojAssemblyReference.cache
