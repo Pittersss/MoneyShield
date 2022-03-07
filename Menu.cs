@@ -15,7 +15,8 @@ namespace TestsMoneyShield
             Console.WriteLine("** Menu **");
             Console.WriteLine("1- Cadastrar-se");
             Console.WriteLine("2- Mostrar Perfil");
-            Console.WriteLine("3- Sair");
+            Console.WriteLine("3- Adicionar Meta/Objetivo");
+            Console.WriteLine("4- Sair");
             MenuLogic();
         }
         public void  MenuLogic()
@@ -24,7 +25,7 @@ namespace TestsMoneyShield
             int index = int.Parse(Console.ReadLine());
            
             //Inicio de um menu que vai se expandir
-            while (index != 4)
+            while (index != 5)
             {
             switch(index)
               {
@@ -37,11 +38,14 @@ namespace TestsMoneyShield
                     main.ShowProfile();
                         break;
                 case 3:
+                    Ambitions.OrganizeAbm();
+                    break;
+                case 4:
                     Console.WriteLine("Muito obrigado. Até mais!");
                     break;
-                case 4: break;
-                    default: Console.WriteLine("Opção Inválida");
-                        break;
+                case 5: break;
+                default: Console.WriteLine("Opção Inválida");
+                break;
 
               }
                 if (index != 6)

@@ -13,6 +13,8 @@ namespace TestsMoneyShield
         static void Main(string[] args)
         {
             //EM PRODUÇÃO
+            Ambitions.ambName = new List<string>();
+            Ambitions.value = new List<double>();
             Menu menu = new Menu();
             menu.VisualMenu();
 

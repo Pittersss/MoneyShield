@@ -226,18 +226,29 @@ namespace TestsMoneyShield
         }
         public void ShowProfile()
         {
+            //Mostrar o perfil
+            try
+            {
             Console.WriteLine("NOME: " + name.ToUpper());
             Console.WriteLine("IDADE: " + age);
             Console.WriteLine("EMPREGO: " + mainJob.ToUpper());
             Console.WriteLine("SALÁRIO: " + rent);
             Console.WriteLine("RENDA LÍQUIDA: " + actualMoney);
+            Console.WriteLine("METAS/OBJETIVOS: " + Ambitions.ambName.ToString());
+            }
+            //Caso o usuário tente ver o perfil, sem ter criado um
+            catch(Exception ex)
+            {
+                Console.WriteLine("Crie um perfil para vizualiza-lo em 'Cadastrar-se'!");
+            }
+            
         }
         //Calculara quanto tempo preciso juntar dinheiro para comprar algo que desejo
         public void CalcAmbs()
         {
             Ambitions.OrganizeAbm();
             double calculo;
-            calculo = Ambitions.value[Ambitions.arrayIndex] / actualMoney;
+            calculo = Ambitions.value.Last<Double>() / actualMoney;
             Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} meses", Convert.ToInt32(calculo));
         }
     }
