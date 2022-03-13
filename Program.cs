@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
 using System.Threading;
+using MySql.Data.MySqlClient;
 
 namespace TestsMoneyShield
 {
@@ -13,11 +14,12 @@ namespace TestsMoneyShield
         static void Main(string[] args)
         {
             //EM PRODUÇÃO
+            DatabaseConnector.Connection();
             Ambitions.ambName = new List<string>();
             Ambitions.value = new List<double>();
             Menu menu = new Menu();
             menu.VisualMenu();
-
+            
             Console.ReadKey();
         }
     }

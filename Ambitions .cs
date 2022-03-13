@@ -13,24 +13,32 @@ namespace TestsMoneyShield
         public static List<Double> value;
         public static int ja = 0;
         public static bool havePlans = true;
-
+        public static bool moreAbm = true;
 
         public static void OrganizeAbm()
-        {
+        { 
             Console.WriteLine("Você possui alguma meta/objetivo que dependa do seu dinheiro?  1- Sim  2- Não");
+           
             if(Console.ReadLine() == "1")
+            {
+            while(moreAbm == true)
             {
             havePlans = true;
             Console.WriteLine("Dê um nome para o seu objetivo/meta");
             ambName.Add(Console.ReadLine());
             Console.WriteLine("Quanto dinheiro você precisa para atingir esse objetivo/meta?");
             value.Add(double.Parse(Console.ReadLine()));
-            }
-            else
+                    //Adicionar mais ambições
+
+            Console.WriteLine("Você possui mais alguma meta/objetivo que dependa do seu dinheiro?  1- Sim  2- Não");               
+            
+            if (Console.ReadLine() == "2")
             {
                 havePlans = false;
+                moreAbm = false;
             }
-            
+            }
+            }   
         }
         
 

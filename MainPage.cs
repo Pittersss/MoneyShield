@@ -3,44 +3,72 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
 
 namespace TestsMoneyShield
 {
     public class MainPage
     {
         ///Variáveis que não podem perder o valor, devem ser fixas nos valores impostos
-        public static string name, mainJob, oddJobName;
-        public static double age;
+
+        public static string name, mainJob;
+        public static List<String> oddJobName = new List<string>();
+        public static double age, cpf;
         public static double rent, oddRent;
         public static double expenses = 0.0;
         public static bool haveOddJob;
-        public static double actualMoney;
+        private static double actualMoney;
 
         ///Variáveis Voláteis 
+        
         public double[] oddjob;
         public int indexOddJob;
-        public bool Oddfortnightly, OddeveryWeek, Oddmonthly, Odddaily;
-        public bool fortnightly, everyWeek, monthly, other;
-        public bool fortnightlyExt, everyWeekExt, monthlyExt, dailyExt;
+        private bool Oddfortnightly, OddeveryWeek, Oddmonthly, Odddaily;
+        private bool fortnightly, everyWeek, monthly, other;
+        private bool fortnightlyExt, everyWeekExt, monthlyExt, dailyExt;
         
         ////Inicialização de Funções que vão construir a página central da aplicação
 
         //Cadastro do usuário
         public void MainPageIntro()
         {
+            //Tentando ler os dados do banco de dados e verificar se o usuario tem ou não cadastro
+                string selectQuery = "SELECT * FROM mytests.usuario";
+                MySqlCommand cmdSelectQuery = new MySqlCommand(selectQuery, DatabaseConnector.connection);
+                MySqlDataReader mdr = cmdSelectQuery.ExecuteReader();
+            mdr.Read();
+            if (mdr.GetDouble("cpf_") != cpf)
+            {         
             Console.WriteLine("Qual é o seu nome?");
             name = Console.ReadLine();
+            string insertProfileValues = "INSERT INTO mytests.usuario(nome, emprego) VALUES('"+name+ "', '"+ mainJob +"')";   
             Console.WriteLine("Qual é a sua idade?");
-            age = Convert.ToDouble(Console.ReadLine()); 
-            //Análise de renda
+            age = Convert.ToDouble(Console.ReadLine());
+            Console.WriteLine("Qual é o seu CPF?");
+            cpf = Convert.ToDouble(Console.ReadLine());          
             Console.WriteLine("Qual é o seu emprego principal?");
             mainJob = Console.ReadLine();
             Console.WriteLine("Qual é a sua renda nesse emprego?");
             rent = Convert.ToDouble(Console.ReadLine());
             Console.WriteLine("Você recebe de forma: 1.Quinzenal, 2.Mensal ou 3.Semanal? Caso seja de outro modo digite 4");
             int geralInts = int.Parse(Console.ReadLine());
-            switch(geralInts)
-            {
+
+            //Comando para armazenar os atributos do perfil no banco de dados
+            string insertProfileValue = "INSERT INTO mytests.usuario(nome, emprego, idade_, cpf_ ) VALUES('" + name + "', '" + mainJob + "', '" + age + "', '" + cpf + "' )";
+            MySqlCommand comando = new MySqlCommand(insertProfileValue, DatabaseConnector.connection);
+                //Verificação de funcionalidade
+                if (comando.ExecuteNonQuery() == 1)
+                {
+                    Console.WriteLine("Eureka 2.0");
+                }
+
+                else
+                {
+                    Console.Write("Volte ao trabalho");
+                }
+                //Aiinda faltam otimizações
+                switch (geralInts)
+                {
                 case 1:
                     fortnightly = true;
                     break;
@@ -52,9 +80,16 @@ namespace TestsMoneyShield
                     break;
                 case 4:
                     other = true;
-                    break;
-                    
+                    break;   
+                }
+
             }
+        else
+            {
+                Menu menu = new Menu();
+                menu.VisualMenu();
+            }
+            
             Console.WriteLine("Seja bem vindo {0}, agora você terá a possibilidade de organizar as suas finaças de maneira simples gratuitamente", name);
             
         }
@@ -66,7 +101,6 @@ namespace TestsMoneyShield
          {
                 haveOddJob = true;
                 OddJobs();
-                CalcExpenses();
          }
         if (Convert.ToString(Console.ReadLine()) == "2")
         {
@@ -81,7 +115,7 @@ namespace TestsMoneyShield
             {
                 //Quantas rendas extras você tem
             double result = 0;
-            Console.WriteLine("Quantos você tem?");
+            Console.WriteLine("Quantas rendas extra você tem?");
             indexOddJob = int.Parse(Console.ReadLine());
             oddjob = new double[indexOddJob];
             double[] oddjobRent = new double[indexOddJob];
@@ -90,7 +124,7 @@ namespace TestsMoneyShield
                 foreach (double s in oddjob)
                 {
                     Console.WriteLine("Qual é o seu cargo na sua renda extra?");
-                    oddJobName = Console.ReadLine();
+                    oddJobName.Add(Console.ReadLine());
                     Console.WriteLine("Lá você recebe 1.diariamente, 2.semanalmente, 3.quinzenalmente ou 4.mensalmente? Digite o número correspondente");
                     result = double.Parse(Console.ReadLine());
                     switch (result)
@@ -119,10 +153,8 @@ namespace TestsMoneyShield
                                 Oddmonthly = true;
                                 rent += oddjobRent[Convert.ToInt64(s)];
                             break;    
-                    }          
+                    }     
                 }
-                
-                
             }
             else
             {
@@ -140,14 +172,12 @@ namespace TestsMoneyShield
             expenses += double.Parse(Console.ReadLine());
             actualMoney = rent - expenses;
             Console.WriteLine("Sobra para você mensalmente {0}", (actualMoney));
-
             }
             if (fortnightly == true)
             {
               Console.WriteLine("Quanto você gasta em despesas, aproximadamente {0}?", "Quinzenalmente");
               expenses += double.Parse(Console.ReadLine()) * 2;
-              actualMoney = rent - expenses;
-              
+              actualMoney = rent - expenses;             
             }
             if (everyWeek == true)
             {
@@ -168,12 +198,12 @@ namespace TestsMoneyShield
         {
             if (Convert.ToString(Console.ReadLine()) == "1")
             {
+                Console.Clear();
                 Console.WriteLine("Quantas?");
                 //Array caso você tenha mais de um dispesa extra e repetir a lógica no foreach abaixo
                 int[] otherExpens = new int[int.Parse(Console.ReadLine())];
                 
                 foreach (int y in otherExpens)
-
                 {
                     Console.WriteLine("Você paga de forma: 1.Quinzenal, 2.Semanal, 3.Diária? Caso seja de outro modo digite 4");
                     int geralInts = int.Parse(Console.ReadLine());
@@ -181,12 +211,18 @@ namespace TestsMoneyShield
                     {
                         case 1:
                             fortnightlyExt = true;
+                            everyWeekExt = false;
+                            dailyExt = false;
                             break;
                         case 2:
                             everyWeekExt = true;
+                            fortnightlyExt = false;
+                            dailyExt = false;
                             break;
                         case 3:
                             dailyExt = true;
+                            fortnightlyExt = false;
+                            everyWeekExt = false;
                             break;
                     }
                     if (fortnightlyExt)
@@ -218,7 +254,6 @@ namespace TestsMoneyShield
                 }
 
             }
-
             if (Convert.ToString(Console.ReadLine()) == "2")
             {
                 Console.WriteLine("Sobra para você {0}", (actualMoney));
@@ -228,13 +263,29 @@ namespace TestsMoneyShield
         {
             //Mostrar o perfil
             try
-            {
-            Console.WriteLine("NOME: " + name.ToUpper());
-            Console.WriteLine("IDADE: " + age);
-            Console.WriteLine("EMPREGO: " + mainJob.ToUpper());
-            Console.WriteLine("SALÁRIO: " + rent);
-            Console.WriteLine("RENDA LÍQUIDA: " + actualMoney);
-            Console.WriteLine("METAS/OBJETIVOS: " + Ambitions.ambName.ToString());
+            {       
+                if(haveOddJob)
+                {
+                    Console.WriteLine("NOME: " + name.ToUpper());
+                    Console.WriteLine("IDADE: " + age);
+                    Console.WriteLine("CPF: " + cpf);
+                    Console.WriteLine("EMPREGO: " + mainJob.ToUpper());
+                    Console.WriteLine("SERVIÇOS SECUNDÁRIOS " + String.Join(", ", oddJobName));
+                    Console.WriteLine("SALÁRIO: " + rent);
+                    Console.WriteLine("RENDA LÍQUIDA: " + actualMoney);
+                    Console.WriteLine("METAS/OBJETIVOS: " + String.Join(", ", Ambitions.ambName));
+                }
+                else
+                {
+                    Console.WriteLine("NOME: " + name.ToUpper());
+                    Console.WriteLine("IDADE: " + age);
+                    Console.WriteLine("CPF: " + cpf);
+                    Console.WriteLine("EMPREGO: " + mainJob.ToUpper());
+                    Console.WriteLine("SALÁRIO: " + rent);
+                    Console.WriteLine("RENDA LÍQUIDA: " + actualMoney);
+                    Console.WriteLine("METAS/OBJETIVOS: " + String.Join(", ", Ambitions.ambName));
+                }
+            
             }
             //Caso o usuário tente ver o perfil, sem ter criado um
             catch(Exception ex)
@@ -249,7 +300,15 @@ namespace TestsMoneyShield
             Ambitions.OrganizeAbm();
             double calculo;
             calculo = Ambitions.value.Last<Double>() / actualMoney;
-            Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} meses", Convert.ToInt32(calculo));
+            if(calculo <= 12)
+            {
+             Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} meses", Convert.ToInt32(calculo));
+            }
+            else
+            {
+             Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} anos", Convert.ToInt32(calculo)/12);
+            }
+            
         }
     }
 }
