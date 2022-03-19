@@ -17,10 +17,12 @@ namespace TestsMoneyShield
         public static double rent, oddRent;
         public static double expenses = 0.0;
         public static bool haveOddJob;
+        public static Int16 isRegister = 0;
         private static double actualMoney;
+        public static MySqlDataReader dataReader;
 
         ///Variáveis Voláteis 
-        
+
         public double[] oddjob;
         public int indexOddJob;
         private bool Oddfortnightly, OddeveryWeek, Oddmonthly, Odddaily;
@@ -32,82 +34,81 @@ namespace TestsMoneyShield
         //Cadastro do usuário
         public void MainPageIntro()
         {
-            //Tentando ler os dados do banco de dados e verificar se o usuario tem ou não cadastro
+                //Tentando ler os dados do banco de dados e verificar se o usuario tem ou não cadastro
                 string selectQuery = "SELECT * FROM mytests.usuario";
                 MySqlCommand cmdSelectQuery = new MySqlCommand(selectQuery, DatabaseConnector.connection);
-                MySqlDataReader mdr = cmdSelectQuery.ExecuteReader();
-            mdr.Read();
-            if (mdr.GetDouble("cpf_") != cpf)
-            {         
-            Console.WriteLine("Qual é o seu nome?");
-            name = Console.ReadLine();
-            string insertProfileValues = "INSERT INTO mytests.usuario(nome, emprego) VALUES('"+name+ "', '"+ mainJob +"')";   
-            Console.WriteLine("Qual é a sua idade?");
-            age = Convert.ToDouble(Console.ReadLine());
-            Console.WriteLine("Qual é o seu CPF?");
-            cpf = Convert.ToDouble(Console.ReadLine());          
-            Console.WriteLine("Qual é o seu emprego principal?");
-            mainJob = Console.ReadLine();
-            Console.WriteLine("Qual é a sua renda nesse emprego?");
-            rent = Convert.ToDouble(Console.ReadLine());
-            Console.WriteLine("Você recebe de forma: 1.Quinzenal, 2.Mensal ou 3.Semanal? Caso seja de outro modo digite 4");
-            int geralInts = int.Parse(Console.ReadLine());
-
-            //Comando para armazenar os atributos do perfil no banco de dados
-            string insertProfileValue = "INSERT INTO mytests.usuario(nome, emprego, idade_, cpf_ ) VALUES('" + name + "', '" + mainJob + "', '" + age + "', '" + cpf + "' )";
-            MySqlCommand comando = new MySqlCommand(insertProfileValue, DatabaseConnector.connection);
-                //Verificação de funcionalidade
-                if (comando.ExecuteNonQuery() == 1)
+                try
                 {
-                    Console.WriteLine("Eureka 2.0");
-                }
+                dataReader = cmdSelectQuery.ExecuteReader();
+                 if(dataReader.Read())
+                 {
+                  isRegister = dataReader.GetInt16("isRegister");
+                 } 
+                }   
+                  finally
+                  {
+                   dataReader.Close();
+                  }
+                         
+            if (isRegister == 0)
+            {
+                Console.WriteLine("Qual é o seu nome?");
+                name = Console.ReadLine();
+                Console.WriteLine("Qual é a sua idade?");
+                age = Convert.ToDouble(Console.ReadLine());
+                Console.WriteLine("Qual é o seu CPF?");
+                cpf = Convert.ToDouble(Console.ReadLine());
+                Console.WriteLine("Qual é o seu emprego principal?");
+                mainJob = Console.ReadLine();
+                Console.WriteLine("Qual é a sua renda nesse emprego?");
+                rent = Convert.ToDouble(Console.ReadLine());
+                Console.WriteLine("Você recebe de forma: 1.Quinzenal, 2.Mensal ou 3.Semanal? Caso seja de outro modo digite 4");
+                int geralInts = int.Parse(Console.ReadLine());
 
-                else
-                {
-                    Console.Write("Volte ao trabalho");
-                }
-                //Aiinda faltam otimizações
+                //Ainda faltam otimizações
                 switch (geralInts)
                 {
-                case 1:
-                    fortnightly = true;
-                    break;
-                case 2:
-                    monthly = true;
-                    break;
-                case 3:
-                    everyWeek = true;
-                    break;
-                case 4:
-                    other = true;
-                    break;   
+                    case 1:
+                        fortnightly = true;
+                        break;
+                    case 2:
+                        monthly = true;
+                        break;
+                    case 3:
+                        everyWeek = true;
+                        break;
+                    case 4:
+                        other = true;
+                        break;
                 }
 
+
+
+                Console.WriteLine("Seja bem vindo {0}, agora você terá a possibilidade de organizar as suas finaças de maneira simples gratuitamente", name);
             }
-        else
+            else
             {
-                Menu menu = new Menu();
-                menu.VisualMenu();
+                Console.Write("Você já tem cadastro!");
             }
-            
-            Console.WriteLine("Seja bem vindo {0}, agora você terá a possibilidade de organizar as suas finaças de maneira simples gratuitamente", name);
-            
         }
         public void oddJobCheck()
         {
-            //ampliar o calculo de renda para pessoas que teem outras fontes de dinheiro
-         Console.WriteLine("Você possui alguma outra fonte de renda? Digite 1 para 'Sim' ou digite 2 para 'Não'");
-         if (Convert.ToString(Console.ReadLine()) == "1")
-         {
-                haveOddJob = true;
-                OddJobs();
-         }
-        if (Convert.ToString(Console.ReadLine()) == "2")
-        {
-          haveOddJob = false;
-         
-        }
-            CalcExpenses();
+            if (isRegister == 0)
+            {
+                //ampliar o calculo de renda para pessoas que teem outras fontes de dinheiro
+                Console.WriteLine("Você possui alguma outra fonte de renda? Digite 1 para 'Sim' ou digite 2 para 'Não'");
+                if (Convert.ToString(Console.ReadLine()) == "1")
+                {
+                    haveOddJob = true;
+                    OddJobs();
+                }
+                if (Convert.ToString(Console.ReadLine()) == "2")
+                {
+                    haveOddJob = false;
+
+                }
+                CalcExpenses();
+            }
         }
         public void OddJobs()
         {
@@ -297,18 +298,35 @@ namespace TestsMoneyShield
         //Calculara quanto tempo preciso juntar dinheiro para comprar algo que desejo
         public void CalcAmbs()
         {
-            Ambitions.OrganizeAbm();
-            double calculo;
-            calculo = Ambitions.value.Last<Double>() / actualMoney;
-            if(calculo <= 12)
-            {
-             Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} meses", Convert.ToInt32(calculo));
+            if (isRegister == 0)
+            {  
+                Ambitions.OrganizeAbm();
+                double calculo;
+                calculo = Ambitions.value.Last<Double>() / actualMoney;
+                if (calculo <= 12)
+                {
+                    Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} meses", Convert.ToInt32(calculo));
+                }
+                else
+                {
+                    Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} anos", Convert.ToInt32(calculo) / 12);
+                }
+                DatabaseConnector.connection.Open();
+                isRegister = 1;
+                string insertProfileValue = "INSERT INTO mytests.usuario(nome, emprego, idade_, cpf_, isRegister, metas) VALUES('" + name + "', '" + mainJob + "', '" + age + "', '" + cpf + "', '" + isRegister + "', '" + Ambitions.ambName +"')";
+                MySqlCommand comando = new MySqlCommand(insertProfileValue, DatabaseConnector.connection);
+                dataReader.Close();
+                if (comando.ExecuteNonQuery() == 1)
+                {
+
+                    Console.WriteLine("Eureka 2.0");
+                }
+
+                else
+                {
+                    Console.Write("Volte ao trabalho");
+                }
             }
-            else
-            {
-             Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} anos", Convert.ToInt32(calculo)/12);
-            }
-            
         }
     }
 }
