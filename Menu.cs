@@ -38,6 +38,7 @@ namespace TestsMoneyShield
                     main.ShowProfile();
                         break;
                 case 3:
+                    Ambitions.havePlans = true;
                     Ambitions.OrganizeAbm();
                     break;
                 case 4:

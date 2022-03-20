@@ -18,7 +18,7 @@ namespace TestsMoneyShield
         public static double expenses = 0.0;
         public static bool haveOddJob;
         public static Int16 isRegister = 0;
-        private static double actualMoney;
+        public static double actualMoney;
         public static MySqlDataReader dataReader;
 
         ///Variáveis Voláteis 
@@ -33,23 +33,7 @@ namespace TestsMoneyShield
 
         //Cadastro do usuário
         public void MainPageIntro()
-        {
-                //Tentando ler os dados do banco de dados e verificar se o usuario tem ou não cadastro
-                string selectQuery = "SELECT * FROM mytests.usuario";
-                MySqlCommand cmdSelectQuery = new MySqlCommand(selectQuery, DatabaseConnector.connection);
-                try
-                {
-                dataReader = cmdSelectQuery.ExecuteReader();
-                 if(dataReader.Read())
-                 {
-                  isRegister = dataReader.GetInt16("isRegister");
-                 } 
-                }   
-                  finally
-                  {
-                   dataReader.Close();
-                  }
-                         
+        {                  
             if (isRegister == 0)
             {
                 Console.WriteLine("Qual é o seu nome?");
@@ -81,9 +65,6 @@ namespace TestsMoneyShield
                         other = true;
                         break;
                 }
-
-
-
                 Console.WriteLine("Seja bem vindo {0}, agora você terá a possibilidade de organizar as suas finaças de maneira simples gratuitamente", name);
             }
             else
@@ -302,30 +283,59 @@ namespace TestsMoneyShield
             {  
                 Ambitions.OrganizeAbm();
                 double calculo;
-                calculo = Ambitions.value.Last<Double>() / actualMoney;
-                if (calculo <= 12)
+                if (Ambitions.havePlans == true)
                 {
-                    Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} meses", Convert.ToInt32(calculo));
+                    calculo = Ambitions.value.Last<Double>() / actualMoney;
+                    if (calculo <= 12)
+                    {
+                        Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} meses", Convert.ToInt32(calculo));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} anos", Convert.ToInt32(calculo) / 12);
+                    }
                 }
-                else
-                {
-                    Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} anos", Convert.ToInt32(calculo) / 12);
-                }
-                DatabaseConnector.connection.Open();
+                
                 isRegister = 1;
-                string insertProfileValue = "INSERT INTO mytests.usuario(nome, emprego, idade_, cpf_, isRegister, metas) VALUES('" + name + "', '" + mainJob + "', '" + age + "', '" + cpf + "', '" + isRegister + "', '" + Ambitions.ambName +"')";
-                MySqlCommand comando = new MySqlCommand(insertProfileValue, DatabaseConnector.connection);
+                Ambitions.SetDataInBD();
+            }
+        }
+        public static void InicializeBD()
+        {
+            //Tentando ler os dados do banco de dados e verificar se o usuario tem ou não cadastro
+            string selectQuery = "SELECT * FROM mytests.usuario";
+            MySqlCommand cmdSelectQuery = new MySqlCommand(selectQuery, DatabaseConnector.connection);
+            try
+            {
+                int i = 0;
+                dataReader = cmdSelectQuery.ExecuteReader();
+                if (dataReader.Read())
+                {
+                    isRegister = dataReader.GetInt16("isRegister");
+                    name = dataReader.GetString("nome");
+                    age = dataReader.GetDouble("idade_");
+                    cpf = dataReader.GetDouble("cpf_");
+                    i = dataReader.GetInt32("metasIndex");
+                    Console.WriteLine(i);
+                    if (dataReader.IsDBNull(6) == false)
+                    {
+                        int num;
+                        while(i > 0)
+                        {
+                            num = dataReader.GetString("metas").IndexOf("metas");
+                            
+                        }
+                    }
+                    mainJob = dataReader.GetString("emprego");
+                    if (dataReader.IsDBNull(2) == false)
+                        oddJobName.Add(dataReader.GetString("rendaSecundaria"));
+                    rent = dataReader.GetDouble("salario");
+                    actualMoney = dataReader.GetDouble("rendaLiquida");
+                }
+            }
+            finally
+            {
                 dataReader.Close();
-                if (comando.ExecuteNonQuery() == 1)
-                {
-
-                    Console.WriteLine("Eureka 2.0");
-                }
-
-                else
-                {
-                    Console.Write("Volte ao trabalho");
-                }
             }
         }
     }

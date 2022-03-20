@@ -15,11 +15,11 @@ namespace TestsMoneyShield
         {
             //EM PRODUÇÃO
             DatabaseConnector.Connection();
+            MainPage.InicializeBD();
             Ambitions.ambName = new List<string>();
             Ambitions.value = new List<double>();
             Menu menu = new Menu();
             menu.VisualMenu();
-            
             Console.ReadKey();
         }
     }
