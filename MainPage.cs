@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
+using System.IO;
 
 namespace TestsMoneyShield
 {
@@ -281,6 +282,7 @@ namespace TestsMoneyShield
         {
             if (isRegister == 0)
             {  
+                
                 Ambitions.OrganizeAbm();
                 double calculo;
                 if (Ambitions.havePlans == true)
@@ -293,12 +295,29 @@ namespace TestsMoneyShield
                     else
                     {
                         Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} anos", Convert.ToInt32(calculo) / 12);
-                    }
+                    }  
                 }
-                
                 isRegister = 1;
-                Ambitions.SetDataInBD();
-            }
+               
+
+            }      
+                    string insertProfileValue = "INSERT INTO mytests.usuario(nome, emprego, idade_, cpf_, isRegister, salario, rendaLiquida) VALUES('" + MainPage.name + "', '" + MainPage.mainJob + "', '" + MainPage.age + "', '" + MainPage.cpf + "', '" + MainPage.isRegister + "' , '" + MainPage.rent + "' , '" + MainPage.actualMoney + "')";
+                    MySqlCommand comando = new MySqlCommand(insertProfileValue, DatabaseConnector.connection);
+                    MainPage.dataReader = comando.ExecuteReader();
+                    MainPage.dataReader.Close();
+                    if (DatabaseConnector.connection.State == System.Data.ConnectionState.Closed)
+                    {
+                        DatabaseConnector.connection.Open();
+                    }
+                    if (comando.ExecuteNonQuery() == 1)
+                    {
+                        Console.WriteLine("Eureka 2.0");
+                    }
+                    else
+                    {
+                        Console.Write("Volte ao trabalho");
+                    }
+                      
         }
         public static void InicializeBD()
         {
@@ -315,17 +334,7 @@ namespace TestsMoneyShield
                     name = dataReader.GetString("nome");
                     age = dataReader.GetDouble("idade_");
                     cpf = dataReader.GetDouble("cpf_");
-                    i = dataReader.GetInt32("metasIndex");
-                    Console.WriteLine(i);
-                    if (dataReader.IsDBNull(6) == false)
-                    {
-                        int num;
-                        while(i > 0)
-                        {
-                            num = dataReader.GetString("metas").IndexOf("metas");
-                            
-                        }
-                    }
+                    Console.WriteLine(i);      
                     mainJob = dataReader.GetString("emprego");
                     if (dataReader.IsDBNull(2) == false)
                         oddJobName.Add(dataReader.GetString("rendaSecundaria"));
