@@ -29,8 +29,6 @@ namespace TestsMoneyShield
                 {
                     Console.WriteLine("Volte ao trabalho");
                 }
-              
-            
             }
             catch(Exception ex)
             {

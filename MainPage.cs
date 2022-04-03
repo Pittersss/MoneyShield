@@ -14,6 +14,7 @@ namespace TestsMoneyShield
 
         public static string name, mainJob;
         public static List<String> oddJobName = new List<string>();
+        public static List<String> TimeAbm = new List<string>();
         public static double age, cpf;
         public static double rent, oddRent;
         public static double expenses = 0.0;
@@ -257,6 +258,7 @@ namespace TestsMoneyShield
                     Console.WriteLine("SALÁRIO: " + rent);
                     Console.WriteLine("RENDA LÍQUIDA: " + actualMoney);
                     Console.WriteLine("METAS/OBJETIVOS: " + String.Join(", ", Ambitions.ambName));
+                    Console.WriteLine("TEMPO PARA JUNTAR O DINHEIRO: " + String.Join(", ", TimeAbm));
                 }
                 else
                 {
@@ -267,6 +269,8 @@ namespace TestsMoneyShield
                     Console.WriteLine("SALÁRIO: " + rent);
                     Console.WriteLine("RENDA LÍQUIDA: " + actualMoney);
                     Console.WriteLine("METAS/OBJETIVOS: " + String.Join(", ", Ambitions.ambName));
+                    Console.WriteLine("VALORES: " + String.Join("$, ", Ambitions.value) + "$");
+                    Console.WriteLine("TEMPO PARA JUNTAR O DINHEIRO: " + String.Join(", ", TimeAbm));
                 }
             
             }
@@ -284,24 +288,12 @@ namespace TestsMoneyShield
             {  
                 
                 Ambitions.OrganizeAbm();
-                double calculo;
-                if (Ambitions.havePlans == true)
-                {
-                    calculo = Ambitions.value.Last<Double>() / actualMoney;
-                    if (calculo <= 12)
-                    {
-                        Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} meses", Convert.ToInt32(calculo));
-                    }
-                    else
-                    {
-                        Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} anos", Convert.ToInt32(calculo) / 12);
-                    }  
-                }
+                        
                 isRegister = 1;
                
 
             }      
-                    string insertProfileValue = "INSERT INTO mytests.usuario(nome, emprego, idade_, cpf_, isRegister, salario, rendaLiquida) VALUES('" + MainPage.name + "', '" + MainPage.mainJob + "', '" + MainPage.age + "', '" + MainPage.cpf + "', '" + MainPage.isRegister + "' , '" + MainPage.rent + "' , '" + MainPage.actualMoney + "')";
+                    string insertProfileValue = "INSERT INTO mytests.usuario(nome, emprego, idade_, cpf_, isRegister, salario, rendaLiquida, metasIndex) VALUES('" + MainPage.name + "', '" + MainPage.mainJob + "', '" + MainPage.age + "', '" + MainPage.cpf + "', '" + MainPage.isRegister + "' , '" + MainPage.rent + "' , '" + MainPage.actualMoney + "' , '" + Ambitions.conter + "')";
                     MySqlCommand comando = new MySqlCommand(insertProfileValue, DatabaseConnector.connection);
                     MainPage.dataReader = comando.ExecuteReader();
                     MainPage.dataReader.Close();
@@ -318,7 +310,19 @@ namespace TestsMoneyShield
                         Console.Write("Volte ao trabalho");
                     }
                       
+                      
         }
+        public static void TimeToDoAmbitions()
+        {
+            if (Ambitions.havePlans == true)
+            {
+                double calculo;
+                calculo = Convert.ToDouble(Ambitions.value.Last<String>()) / actualMoney;   
+                calculo = Math.Round(calculo, 2);
+                TimeAbm.Add(Convert.ToString(calculo) +" MESES");
+                Console.WriteLine("Você terá que guardar do dinheiro que lhe sobra, por aproximadamente {0} meses", Convert.ToInt32(calculo));
+            }
+        } 
         public static void InicializeBD()
         {
             //Tentando ler os dados do banco de dados e verificar se o usuario tem ou não cadastro
@@ -337,9 +341,11 @@ namespace TestsMoneyShield
                     Console.WriteLine(i);      
                     mainJob = dataReader.GetString("emprego");
                     if (dataReader.IsDBNull(2) == false)
-                        oddJobName.Add(dataReader.GetString("rendaSecundaria"));
+                    oddJobName.Add(dataReader.GetString("rendaSecundaria"));
                     rent = dataReader.GetDouble("salario");
                     actualMoney = dataReader.GetDouble("rendaLiquida");
+                    Ambitions.LoadAmbitions();
+                    Ambitions.conter = dataReader.GetInt16("metasIndex");
                 }
             }
             finally
